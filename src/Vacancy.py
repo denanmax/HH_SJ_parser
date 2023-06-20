@@ -21,17 +21,3 @@ class Vacancy:
                f"Город: {self.city}\n" \
                f"Cсылка на вакансию: {self.link}\n"
 
-    def __gt__(self, other):
-        return int(self.salary_from) > int(other.salary_from)
-
-    def __ge__(self, other):
-        return int(self.salary_from) >= int(other.salary_from)
-
-    def __lt__(self, other):
-        return int(self.salary_from) < int(other.salary_from)
-
-    def __le__(self, other):
-        return int(self.salary_from) <= int(other.salary_from)
-
-    def __eq__(self, other):
-        return int(self.salary_from) == int(other.salary_from)
