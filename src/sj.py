@@ -2,9 +2,9 @@ import json
 
 import requests
 
-from Vacancy import Vacancy
-from abstract import AbstractVacancyAPI
-from json_saver import SaveToJson
+from src.Vacancy import Vacancy
+from src.abstract import AbstractVacancyAPI
+from src.json_saver import SaveToJson
 
 
 class SuperJobAPI(AbstractVacancyAPI):
@@ -43,7 +43,7 @@ class SuperJobAPI(AbstractVacancyAPI):
 class JSONSaverSJ(SaveToJson):
     """Класс для сохранения информации о вакансиях в файл"""
 
-    def json_read(self):
+    def json_filtered_vacancies(self):
         with open(self.filename(suffix='sj'), 'r', encoding='utf-8') as file:
             data = json.load(file)
 
@@ -64,8 +64,8 @@ class JSONSaverSJ(SaveToJson):
                                         row['profession'], row['town']['title'],
                                         row['link']))
             for vacancy in vacancies_sj:
-                filtered_data_sj.append({'Компания': vacancy.employer,
-                                         'Профессия': vacancy.title,
+                filtered_data_sj.append({'Компания': vacancy.title,
+                                         'Профессия': vacancy.employer,
                                          'От': vacancy.salary_from,
                                          'До': vacancy.salary_to,
                                          'Валюта': vacancy.currency,
@@ -81,17 +81,4 @@ class JSONSaverSJ(SaveToJson):
         """Метод для записи информации о вакансиях в json файл"""
         with open(self.filename(suffix), 'w', encoding='utf-8') as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
-
-
-sj_keyword = 'химик'
-
-spj_api = SuperJobAPI()
-
-spj_vacancies = spj_api.get_vacancies(sj_keyword)
-
-json_server_spj = JSONSaverSJ(sj_keyword)
-json_server_spj.save_vacancies(spj_vacancies)
-data_spj = json_server_spj.json_read()
-for row in data_spj:
-    print(row)
 
