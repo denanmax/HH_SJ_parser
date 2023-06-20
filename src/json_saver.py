@@ -1,4 +1,3 @@
-
 class SaveToJson:
     """Класс для сохранения информации о вакансиях в файл"""
 
@@ -16,4 +15,3 @@ class SaveToJson:
     @staticmethod
     def json_filtered_vacancies(self):
         pass
-
