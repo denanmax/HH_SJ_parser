@@ -8,11 +8,12 @@ class SaveToJson:
     def filename(self, suffix):
         return f"{self.keyword}_{suffix}.json"
 
+    @staticmethod
     def save_vacancies(self, data, suffix=''):
         """Метод для записи информации о вакансиях в json файл"""
         pass
 
-    def json_read(self):
+    @staticmethod
+    def json_filtered_vacancies(self):
         pass
-
 
