@@ -8,28 +8,41 @@ from src.json_saver import SaveToJson
 
 class HeadHunterAPI(AbstractVacancyAPI):
     """Класс запроса данных по API HH.ru"""
-    def request_api(self, keyword):
+    def __init__(self, keyword, num_vacancies):
+        super().__init__(keyword, num_vacancies)
+
+    def request_api(self,  keyword, num_vacancies):
         """Метод запроса по API"""
         params = {
-            "text": keyword,
-            "per_page": 100,
+            "text": self.keyword,
+            "per_page": self.num_vacancies
         }
         headers = {"HH-User-Agent": 'VacancyMachine/1.0 (deshis93@gmail.com)'}
 
-        return requests.get("https://api.hh.ru/vacancies", params=params, headers=headers).json()['items']
+        try:
+            return requests.get("https://api.hh.ru/vacancies", params=params, headers=headers).json()['items']
 
-    def get_vacancies(self, keyword):
+        except KeyError:
+            raise print("Внимание! Для работы с HH.ru нужно ввести хотя-бы один параметр!")
+        except ConnectionError:
+            raise print("Нужен доступ в интернет")
+
+    def get_vacancies(self, keyword, num_vacancies):
         """Метод поиска всех вакансий по заданным параметрам"""
         pages = 1
         response = []
 
-        for page in range(pages):
-            list_of_vacancies = self.request_api(keyword)
-            print(f"С сайта HH.ru найдено: {len(list_of_vacancies)} вакансий\n")
-            response.extend(list_of_vacancies)
+        try:
+            for page in range(pages):
+                list_of_vacancies = self.request_api(keyword, num_vacancies)
+                print(f"С сайта HH.ru найдено: {len(list_of_vacancies)} вакансий\n")
+                response.extend(list_of_vacancies)
+        except TypeError:
+            print(f"Произошла ошибка при получении вакансий c HH.ru. Нам очень жаль :(")
+        except ConnectionError:
+            raise print("Нужен доступ в интернет")
 
         return response
-
 
 
 class JSONSaverHH(SaveToJson):
@@ -68,7 +81,7 @@ class JSONSaverHH(SaveToJson):
                                   'Город': vacancy.city,
                                   'Ссылка': vacancy.link})
 
-        with open(f"HH_filtered.json", 'w', encoding='utf-8') as file:
+        with open(f"FILTERED_{self.filename('HH')}", 'w', encoding='utf-8') as file:
             json.dump(filtered_data, file, ensure_ascii=False, indent=4)
 
         return vacancies
@@ -77,4 +90,5 @@ class JSONSaverHH(SaveToJson):
         """Метод для записи информации о вакансиях в json файл"""
         with open(self.filename(suffix), 'w', encoding='utf-8') as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
+
 
