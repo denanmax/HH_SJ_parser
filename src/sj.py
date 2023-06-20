@@ -63,6 +63,7 @@ class JSONSaverSJ(SaveToJson):
                                         currency,
                                         row['profession'], row['town']['title'],
                                         row['link']))
+
             for vacancy in vacancies_sj:
                 filtered_data_sj.append({'Компания': vacancy.title,
                                          'Профессия': vacancy.employer,
