@@ -37,12 +37,13 @@ class HeadHunterAPI(AbstractVacancyAPI):
                 list_of_vacancies = self.request_api(keyword, num_vacancies)
                 print(f"С сайта HH.ru найдено: {len(list_of_vacancies)} вакансий\n")
                 response.extend(list_of_vacancies)
+                return response
         except TypeError:
             print(f"Произошла ошибка при получении вакансий c HH.ru. Нам очень жаль :(")
         except ConnectionError:
-            raise print("Нужен доступ в интернет")
+            print("Нужен доступ в интернет")
 
-        return response
+
 
 
 class JSONSaverHH(SaveToJson):
