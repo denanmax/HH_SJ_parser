@@ -41,7 +41,7 @@ class JSONSaverHH(SaveToJson):
             data = json.load(file)
 
         vacancies = []
-        filtered_data = []
+
         for row in data:
             salary_min = None
             salary_max = None
@@ -58,6 +58,7 @@ class JSONSaverHH(SaveToJson):
                                      row['area']['name'],
                                      row['alternate_url']))
 
+        filtered_data = []
         for vacancy in vacancies:
             filtered_data.append({'Компания': vacancy.employer,
                                   'Профессия': vacancy.title,

@@ -42,8 +42,6 @@ class SuperJobAPI(AbstractVacancyAPI):
 
 class JSONSaverSJ(SaveToJson):
     """Класс для сохранения информации о вакансиях в файл"""
-    def __init__(self, keyword):
-        super().__init__(keyword)
 
     def json_read(self):
         with open(self.filename(suffix='sj'), 'r', encoding='utf-8') as file:
