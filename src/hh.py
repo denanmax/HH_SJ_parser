@@ -1,9 +1,9 @@
 import json
 import requests
 
-from Vacancy import Vacancy
-from abstract import AbstractVacancyAPI
-from json_saver import SaveToJson
+from src.Vacancy import Vacancy
+from src.abstract import AbstractVacancyAPI
+from src.json_saver import SaveToJson
 
 
 class HeadHunterAPI(AbstractVacancyAPI):
@@ -35,7 +35,7 @@ class HeadHunterAPI(AbstractVacancyAPI):
 class JSONSaverHH(SaveToJson):
     """Класс для сохранения информации о вакансиях в файл"""
 
-    def json_read(self):
+    def json_filtered_vacancies(self):
         """Метод для чтения информации о вакансиях из json файла"""
         with open(self.filename(suffix='hh'), 'r', encoding='utf-8') as file:
             data = json.load(file)
@@ -77,17 +77,4 @@ class JSONSaverHH(SaveToJson):
         """Метод для записи информации о вакансиях в json файл"""
         with open(self.filename(suffix), 'w', encoding='utf-8') as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
-
-
-hh_keyword = 'химик'
-hh_api = HeadHunterAPI()
-
-hh_vacancies = hh_api.get_vacancies(hh_keyword)
-
-json_sever_hh = JSONSaverHH(hh_keyword)
-json_sever_hh.save_vacancies(hh_vacancies)
-data_hh = json_sever_hh.json_read()
-
-for i in data_hh:
-    print(i)
 
