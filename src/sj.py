@@ -12,7 +12,10 @@ class SuperJobAPI(AbstractVacancyAPI):
 
     URL = "https://api.superjob.ru/2.0/vacancies/?"
 
-    def request_api(self, keyword):
+    def __init__(self, keyword, num_vacancies):
+        super().__init__(keyword, num_vacancies)
+
+    def request_api(self, keyword, num_vacancies):
         """Метод запроса по API"""
         headers = {
             'Host': 'api.superjob.ru',
@@ -22,24 +25,30 @@ class SuperJobAPI(AbstractVacancyAPI):
         }
         params = {
             'keyword': keyword.title(),
-            'count': 100,
+            'count': num_vacancies,
         }
+        try:
+            return requests.get(self.URL, headers=headers, params=params).json()['objects']
+        except KeyError:
+            raise print("Внимание! Для работы с HH.ru нужно ввести хотя-бы один параметр!")
+        except ConnectionError:
+            raise print("Нужен доступ в интернет")
 
-        return requests.get(self.URL, headers=headers, params=params).json()['objects']
-
-    def get_vacancies(self, keyword):
+    def get_vacancies(self, keyword, num_vacancies):
         """Метод поиска всех вакансий по заданным параметрам"""
         pages = 1
         response = []
 
-        for page in range(pages):
-            list_of_vacancies = self.request_api(keyword)
-            print(f"С сайта Super Job найдено: {len(list_of_vacancies)} вакансий\n")
-            response.extend(list_of_vacancies)
-
-        return response
-
-
+        try:
+            for page in range(pages):
+                list_of_vacancies = self.request_api(keyword, num_vacancies)
+                print(f"С сайта Super Job найдено: {len(list_of_vacancies)} вакансий\n")
+                response.extend(list_of_vacancies)
+                return response
+        except TypeError:
+            print(f"Произошла ошибка при получении вакансий c HH.ru. Нам очень жаль :(")
+        except ConnectionError:
+            print("Нужен доступ в интернет")
 class JSONSaverSJ(SaveToJson):
     """Класс для сохранения информации о вакансиях в файл"""
 
@@ -82,4 +91,3 @@ class JSONSaverSJ(SaveToJson):
         """Метод для записи информации о вакансиях в json файл"""
         with open(self.filename(suffix), 'w', encoding='utf-8') as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
-
