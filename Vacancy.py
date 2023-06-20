@@ -1,3 +1,6 @@
+import json
+
+
 class Vacancy:
     """Класс для формирования критериев отбора вакансий"""
 
@@ -17,6 +20,21 @@ class Vacancy:
         if self.salary_from is None and self.salary_to is None:
             salary_from = "Заработная плата не указана"
         return f"{self.employer}: {self.title}\n" \
-               f"{salary_from} {salary_to}{currency}\n" \
+               f"{salary_from} {salary_to} {currency}\n" \
                f"Город: {self.city}\n" \
                f"Cсылка на вакансию: {self.link}\n"
+
+    def __gt__(self, other):
+        return int(self.salary_from) > int(other.salary_from)
+
+    def __ge__(self, other):
+        return int(self.salary_from) >= int(other.salary_from)
+
+    def __lt__(self, other):
+        return int(self.salary_from) < int(other.salary_from)
+
+    def __le__(self, other):
+        return int(self.salary_from) <= int(other.salary_from)
+
+    def __eq__(self, other):
+        return int(self.salary_from) == int(other.salary_from)
