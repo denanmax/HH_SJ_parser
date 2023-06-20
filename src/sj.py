@@ -34,7 +34,7 @@ class SuperJobAPI(AbstractVacancyAPI):
 
         for page in range(pages):
             list_of_vacancies = self.request_api(keyword)
-            print(f"Вакансий найдено: {len(list_of_vacancies)}")
+            print(f"С сайта Super Job найдено: {len(list_of_vacancies)} вакансий\n")
             response.extend(list_of_vacancies)
 
         return response

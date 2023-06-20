@@ -12,7 +12,7 @@ class HeadHunterAPI(AbstractVacancyAPI):
         """Метод запроса по API"""
         params = {
             "text": keyword,
-            "per_page": 10,
+            "per_page": 100,
         }
         headers = {"HH-User-Agent": 'VacancyMachine/1.0 (deshis93@gmail.com)'}
 
@@ -25,7 +25,7 @@ class HeadHunterAPI(AbstractVacancyAPI):
 
         for page in range(pages):
             list_of_vacancies = self.request_api(keyword)
-            print(f"Вакансий найдено: {len(list_of_vacancies)}")
+            print(f"С сайта HH.ru найдено: {len(list_of_vacancies)} вакансий\n")
             response.extend(list_of_vacancies)
 
         return response
