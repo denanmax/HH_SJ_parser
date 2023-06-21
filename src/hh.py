@@ -1,4 +1,3 @@
-import json
 import requests
 
 from src.Vacancy import Vacancy
@@ -17,13 +16,13 @@ class HeadHunterAPI(AbstractVacancyAPI):
             "text": self.keyword,
             "per_page": self.num_vacancies
         }
-        headers = {"HH-User-Agent": 'VacancyMachine/1.0 (deshis93@gmail.com)'}
+        headers = {"HH-User-Agent": 'VacancyMachine/2.0'}
 
         try:
             return requests.get("https://api.hh.ru/vacancies", params=params, headers=headers).json()['items']
 
         except KeyError:
-            raise print("Внимание! Для работы с HH.ru нужно ввести хотя-бы один параметр!")
+            pass
         except ConnectionError:
             raise print("Нужен доступ в интернет")
 
@@ -44,16 +43,10 @@ class HeadHunterAPI(AbstractVacancyAPI):
             print("Нужен доступ в интернет")
 
 
-
-
 class JSONSaverHH(SaveToJson):
     """Класс для сохранения информации о вакансиях в файл"""
-
-    def json_filtered_vacancies(self):
-        """Метод для чтения информации о вакансиях из json файла"""
-        with open(self.filename(suffix='hh'), 'r', encoding='utf-8') as file:
-            data = json.load(file)
-
+    def vacancy_list_to_print(self, data):
+        """Метод для создания списка объектов из полученных данных для вывода на экран"""
         vacancies = []
 
         for row in data:
@@ -71,25 +64,4 @@ class JSONSaverHH(SaveToJson):
                                      row['employer']['name'],
                                      row['area']['name'],
                                      row['alternate_url']))
-
-        filtered_data = []
-        for vacancy in vacancies:
-            filtered_data.append({'Компания': vacancy.employer,
-                                  'Профессия': vacancy.title,
-                                  'От': vacancy.salary_from,
-                                  'До': vacancy.salary_to,
-                                  'Валюта': vacancy.currency,
-                                  'Город': vacancy.city,
-                                  'Ссылка': vacancy.link})
-
-        with open(f"FILTERED_{self.filename('HH')}", 'w', encoding='utf-8') as file:
-            json.dump(filtered_data, file, ensure_ascii=False, indent=4)
-
         return vacancies
-
-    def save_vacancies(self, data, suffix='hh'):
-        """Метод для записи информации о вакансиях в json файл"""
-        with open(self.filename(suffix), 'w', encoding='utf-8') as file:
-            json.dump(data, file, indent=4, ensure_ascii=False)
-
-
