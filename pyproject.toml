@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "hh and sj parser"
+version = "0.5.1"
+description = "Parser for HH and SJ websites for vacancies search"
+authors = ["Denis M."]
+license = "nil"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+requests = "^2.31.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
