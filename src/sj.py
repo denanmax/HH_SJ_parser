@@ -1,3 +1,4 @@
+import os
 import requests
 
 from src.Vacancy import Vacancy
@@ -15,9 +16,10 @@ class SuperJobAPI(AbstractVacancyAPI):
 
     def request_api(self, keyword, num_vacancies):
         """Метод запроса по API"""
+        api_key: str = os.getenv('SJ_API_KEY')
         headers = {
             'Host': 'api.superjob.ru',
-            'X-Api-App-Id': "v3.r.128133351.1ee4ce9abaa8c792c86bfabef8bb09847f471b29.93066d454cf5352926f7ca0527e018ba62acb14e",
+            'X-Api-App-Id': api_key,
             'Authorization': 'Bearer r.000000010000001.example.access_token',
             'Content-Type': 'application/x-www-form-urlencoded'
         }
@@ -33,7 +35,7 @@ class SuperJobAPI(AbstractVacancyAPI):
             raise print("Нужен доступ в интернет")
 
     def get_vacancies(self, keyword, num_vacancies):
-        """Метод поиска всех вакансий по заданным параметрам"""
+        """Метод поиска всех вакансий по заданным параметрам(SJ)"""
         pages = 1
         response = []
 
