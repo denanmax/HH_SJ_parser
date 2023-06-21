@@ -1,5 +1,3 @@
-import json
-
 import requests
 
 from src.Vacancy import Vacancy
@@ -49,15 +47,15 @@ class SuperJobAPI(AbstractVacancyAPI):
             print(f"Произошла ошибка при получении вакансий c HH.ru. Нам очень жаль :(")
         except ConnectionError:
             print("Нужен доступ в интернет")
+
+
 class JSONSaverSJ(SaveToJson):
     """Класс для сохранения информации о вакансиях в файл"""
 
-    def json_filtered_vacancies(self):
-        with open(self.filename(suffix='sj'), 'r', encoding='utf-8') as file:
-            data = json.load(file)
+    def vacancy_list_to_print(self, data):
+        """Метод для создания списка объектов из полученных данных для вывода на экран"""
+        vacancies = []
 
-        vacancies_sj = []
-        filtered_data_sj = []
         for row in data:
             salary_from = None
             salary_to = None
@@ -66,28 +64,12 @@ class JSONSaverSJ(SaveToJson):
                 salary_from = row['payment_from']
                 salary_to = row['payment_to']
                 currency = row['currency']
-            vacancies_sj.append(Vacancy(row['firm_name'],
-                                        salary_from,
-                                        salary_to,
-                                        currency,
-                                        row['profession'], row['town']['title'],
-                                        row['link']))
+            vacancies.append(Vacancy(row['firm_name'],
+                                     salary_from,
+                                     salary_to,
+                                     currency,
+                                     row['profession'], row['town']['title'],
+                                     row['link']))
 
-            for vacancy in vacancies_sj:
-                filtered_data_sj.append({'Компания': vacancy.title,
-                                         'Профессия': vacancy.employer,
-                                         'От': vacancy.salary_from,
-                                         'До': vacancy.salary_to,
-                                         'Валюта': vacancy.currency,
-                                         'Город': vacancy.city,
-                                         'Ссылка': vacancy.link})
+        return vacancies
 
-            with open(f"SJ_filtered.json", 'w', encoding='utf-8') as file:
-                json.dump(filtered_data_sj, file, ensure_ascii=False, indent=4)
-
-        return vacancies_sj
-
-    def save_vacancies(self, data, suffix='sj'):
-        """Метод для записи информации о вакансиях в json файл"""
-        with open(self.filename(suffix), 'w', encoding='utf-8') as file:
-            json.dump(data, file, indent=4, ensure_ascii=False)
