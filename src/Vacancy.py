@@ -22,7 +22,7 @@ class Vacancy:
                f"Cсылка на вакансию: {self.link}\n"
 
     def __gt__(self, other):
-        return int(self.salary_from) > int(other.salary_from)
+        return int(self.salary_from) > int(other.salary_to)
 
     def __ge__(self, other):
         return int(self.salary_from) >= int(other.salary_from)
