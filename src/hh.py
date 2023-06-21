@@ -7,10 +7,11 @@ from src.json_saver import SaveToJson
 
 class HeadHunterAPI(AbstractVacancyAPI):
     """Класс запроса данных по API HH.ru"""
+
     def __init__(self, keyword, num_vacancies):
         super().__init__(keyword, num_vacancies)
 
-    def request_api(self,  keyword, num_vacancies):
+    def request_api(self, keyword, num_vacancies):
         """Метод запроса по API"""
         params = {
             "text": self.keyword,
@@ -27,7 +28,7 @@ class HeadHunterAPI(AbstractVacancyAPI):
             raise print("Нужен доступ в интернет")
 
     def get_vacancies(self, keyword, num_vacancies):
-        """Метод поиска всех вакансий по заданным параметрам"""
+        """Метод поиска всех вакансий по заданным параметрам keyword and num_vacncies"""
         pages = 1
         response = []
 
@@ -38,13 +39,14 @@ class HeadHunterAPI(AbstractVacancyAPI):
                 response.extend(list_of_vacancies)
                 return response
         except TypeError:
-            print(f"Произошла ошибка при получении вакансий c HH.ru. Нам очень жаль :(")
+            print(f"Не указан ни один параметр поиска на HH.ru :(")
         except ConnectionError:
             print("Нужен доступ в интернет")
 
 
 class JSONSaverHH(SaveToJson):
     """Класс для сохранения информации о вакансиях в файл"""
+
     def vacancy_list_to_print(self, data):
         """Метод для создания списка объектов из полученных данных для вывода на экран"""
         vacancies = []
