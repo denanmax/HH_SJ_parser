@@ -15,7 +15,7 @@ class SaveToJson:
         """Метод для записи информации о вакансиях в json файл"""
         try:
             vacancies = self.vacancy_list_to_print(data)
-        except:
+        except TypeError:
             pass
 
         filtered_data = []
